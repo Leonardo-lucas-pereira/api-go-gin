@@ -8,9 +8,12 @@ import (
 
 	"github.com/Leonardo-lucas-pereira/api-go-gin/controllers"
 	"github.com/Leonardo-lucas-pereira/api-go-gin/database"
+	"github.com/Leonardo-lucas-pereira/api-go-gin/models"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
+
+var ID int
 
 func SetupDasRotasDeTeste() *gin.Engine {
 	rotas := gin.Default()
@@ -31,6 +34,8 @@ func TestVerificaStatusCodeSaudacao(t *testing.T) {
 
 func TestListandoAlunos(t *testing.T) {
 	database.ConectaComBancoDeDados()
+	CriaAlunoMock()
+	defer DeletaAlunoMock()
 	r := SetupDasRotasDeTeste()
 	r.GET("/alunos", controllers.TodosAlunos)
 	req, _ := http.NewRequest("GET", "/alunos", nil)
@@ -38,5 +43,19 @@ func TestListandoAlunos(t *testing.T) {
 	r.ServeHTTP(resposta, req)
 	assert.Equal(t, http.StatusOK, resposta.Code, "Deveriam ser iguais")
 	//fmt.Println(resposta.Body) obtem retorno da req -> registro do DB
+}
 
+func CriaAlunoMock() {
+	aluno := models.Aluno{
+		Nome: "Nome do Aluno Test",
+		CPF:  "12345678901",
+		RG:   "123456789",
+	}
+	database.DB.Create(&aluno)
+	ID = int(aluno.ID)
+}
+
+func DeletaAlunoMock() {
+	var aluno models.Aluno
+	database.DB.Delete(&aluno, ID)
 }
