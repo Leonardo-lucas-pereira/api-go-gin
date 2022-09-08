@@ -17,7 +17,7 @@ func ExibeTodosAlunos(c *gin.Context) {
 func Saudacao(c *gin.Context) {
 	nome := c.Params.ByName("nome")
 	c.JSON(200, gin.H{
-		"API diz:": "E ai " + nome + ", tudo bem?",
+		"API diz:": "E ai " + nome + ", tudo beleza?",
 	})
 }
 
@@ -35,15 +35,14 @@ func CriaNovoAluno(c *gin.Context) {
 func BuscaAlunoPorID(c *gin.Context) {
 	var aluno models.Aluno
 	id := c.Params.ByName("id")
-
 	database.DB.First(&aluno, id)
 
 	if aluno.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{
-			"Not found": "Aluno não encontrado",
-		})
+			"Not found": "Aluno não encontrado"})
 		return
 	}
+
 	c.JSON(http.StatusOK, aluno)
 }
 
@@ -51,9 +50,7 @@ func DeletaAluno(c *gin.Context) {
 	var aluno models.Aluno
 	id := c.Params.ByName("id")
 	database.DB.Delete(&aluno, id)
-	c.JSON(http.StatusOK, gin.H{
-		"data": "Aluno deletado com sucesso.",
-	})
+	c.JSON(http.StatusOK, gin.H{"data": "Aluno deletado com sucesso"})
 }
 
 func EditaAluno(c *gin.Context) {
@@ -63,8 +60,7 @@ func EditaAluno(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&aluno); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+			"error": err.Error()})
 		return
 	}
 
@@ -79,10 +75,9 @@ func BuscaAlunoPorCPF(c *gin.Context) {
 
 	if aluno.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{
-			"Not found": "Aluno não encontrado",
-		})
+			"Not found": "Aluno não encontrado"})
 		return
 	}
-	c.JSON(http.StatusOK, aluno)
 
+	c.JSON(http.StatusOK, aluno)
 }
