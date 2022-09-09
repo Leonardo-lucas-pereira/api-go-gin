@@ -92,3 +92,15 @@ func TestBuscaAlunoPorIDHandler(t *testing.T) {
 	assert.Equal(t, "123456789", alunoMock.RG)
 	assert.Equal(t, http.StatusOK, resposta.Code)
 }
+
+func TestDeletaAluno(t *testing.T) {
+	database.ConectaComBancoDeDados()
+	CriaAlunoMock()
+	r := SetupDasRotasDeTeste()
+	r.DELETE("/alunos/:id", controllers.DeletarAluno)
+	pathDaBusca := "/alunos/" + strconv.Itoa(ID)
+	req, _ := http.NewRequest("DELETE", pathDaBusca, nil)
+	resposta := httptest.NewRecorder()
+	r.ServeHTTP(resposta, req)
+	assert.Equal(t, http.StatusOK, resposta.Code)
+}
